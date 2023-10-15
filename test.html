@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JS Drums</title>
+    <link rel="stylesheet" href="raw-style.css" />
+  </head>
+  <body>
+    <div class="keys">
+      4
+      <div data-key="KeyA" class="key">
+        <kbd>A</kbd>
+        <span class="sound">clap</span>
+      </div>
+      <div data-key="KeyS" class="key">
+        <kbd>S</kbd>
+        <span class="sound">hihat</span>
+      </div>
+      <div data-key="KeyD" class="key">
+        <kbd>D</kbd>
+        <span class="sound">kick</span>
+      </div>
+      <div data-key="KeyF" class="key">
+        <kbd>F</kbd>
+        <span class="sound">openhat</span>
+      </div>
+      <div data-key="KeyG" class="key">
+        <kbd>G</kbd>
+        <span class="sound">boom</span>
+      </div>
+      <div data-key="KeyH" class="key">
+        <kbd>H</kbd>
+        <span class="sound">ride</span>
+      </div>
+      <div data-key="KeyJ" class="key">
+        <kbd>J</kbd>
+        <span class="sound">snare</span>
+      </div>
+      <div data-key="KeyK" class="key">
+        <kbd>K</kbd>
+        <span class="sound">tom</span>
+      </div>
+      <div data-key="KeyL" class="key">
+        <kbd>L</kbd>
+        <span class="sound">tink</span>
+      </div>
+    </div>
+
+    <audio data-key="KeyA" src="sounds/Pew_Pew.wav"></audio>
+    <audio data-key="KeyS" src="sounds/trap.mp3"></audio>
+    <audio data-key="KeyD" src="sounds/kick.wav"></audio>
+    <audio data-key="KeyF" src="sounds/openhat.wav"></audio>
+    <audio data-key="KeyG" src="sounds/boom.wav"></audio>
+    <audio data-key="KeyH" src="sounds/ride.wav"></audio>
+    <audio data-key="KeyJ" src="sounds/snare.wav"></audio>
+    <audio data-key="KeyK" src="sounds/tom.wav"></audio>
+    <audio data-key="KeyL" src="sounds/tink.wav"></audio>
+
+    <script>
+      function removeTransition(e) {
+        if (e.propertyName !== "transform") return;
+        e.target.classList.remove("playing");
+      }
+
+      //The purpose of this function is play a sound based on a specific event (typically a ke press)
+      function playSound(e) {
+        const audio = document.querySelector(`audio[data-key="${e.code}"]`);
+        const key = document.querySelector(`div[data-key="${e.code}"]`);
+        //This line checks if the audio element was found. If not, the function returns early.
+        if (!audio) return;
+
+        key.classList.add("playing");
+        //used to set the playback position of an audio or video element in seconds.
+        audio.currentTime = 0;
+        //'play() method' is called on the audio element which plays the audio associated with the key press
+        audio.play();
+      }
+
+      //this piece of code is converting the nodelist to a standard array which provides access to methods and properties that are otherwise unavailable to a nodelist.
+      const keys = Array.from(document.querySelectorAll(".key"));
+      keys.forEach((key) =>
+        key.addEventListener("transitionend", removeTransition)
+      );
+      //adds a "keydown" event listener to the window object. It listens for keyboard keydown events.
+      window.addEventListener("keydown", playSound);
+    </script>
+  </body>
+</html>
